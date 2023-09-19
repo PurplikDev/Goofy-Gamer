@@ -643,6 +643,7 @@ MonoBehaviour:
   sensitivity: 200
   orientation: {fileID: 887219350}
   head: {fileID: 1886944903}
+  player: {fileID: 887219349}
   lockRotation: 0
 --- !u!1 &1077330279
 GameObject:

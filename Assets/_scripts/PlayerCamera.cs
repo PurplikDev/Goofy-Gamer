@@ -41,11 +41,8 @@ namespace goofygame.creature.player {
             xRotation = Mathf.Clamp(xRotation, -80, 80);
 
             head.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-            transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+            transform.rotation = Quaternion.Euler(xRotation, yRotation, transform.rotation.z);
             orientation.rotation = Quaternion.Euler(0, yRotation, 0);
-
-            Vector3 velocity = player.GetComponent<Rigidbody>().velocity;
-            
         }
     }
 }

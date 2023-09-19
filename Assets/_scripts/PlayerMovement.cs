@@ -10,10 +10,6 @@ namespace goofygame.creature.player {
         [Space]
         public float groundDrag;
         [Space]
-        public float jumpForce;
-        public float jumpCooldown;
-        public float airMultiplier;
-        bool readyToJump = true;
         [Header("Ground Check")]
         public float playerHeight;
         public LayerMask groundMask;
@@ -46,6 +42,7 @@ namespace goofygame.creature.player {
             ProcessInputs();
             SpeedCap();
             StateHandler();
+            RotateCamera();
 
             rigidbody.drag = grounded ? groundDrag : 0;
         }
@@ -60,12 +57,6 @@ namespace goofygame.creature.player {
             horizontalInput = Input.GetAxisRaw("Horizontal");
             verticalInput = Input.GetAxisRaw("Vertical");
 
-            if(Input.GetKeyDown(PlayerKeybinds.jump) && readyToJump && grounded) {
-                readyToJump = false;
-                Jump();
-                Invoke(nameof(ResetJump), jumpCooldown);
-            }
-
             if(Input.GetKeyDown(PlayerKeybinds.crouch)) {
                 hitbox.height = crouchYScale;
             }
@@ -77,12 +68,7 @@ namespace goofygame.creature.player {
         private void MovePlayer() {
             moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-            if(grounded) {
-                rigidbody.AddForce(moveDirection.normalized * movementSpeed * 10f, ForceMode.Force);
-            } else if(!grounded) {
-                rigidbody.AddForce(moveDirection.normalized * movementSpeed * 10f * airMultiplier, ForceMode.Force);
-            }
-
+            rigidbody.AddForce(moveDirection.normalized * movementSpeed * 10f, ForceMode.Force);
         }
 
         private void SpeedCap() {
@@ -94,35 +80,23 @@ namespace goofygame.creature.player {
             }
         }
 
-        private void Jump() {
-            rigidbody.velocity = new Vector3(rigidbody.velocity.x, 0f, rigidbody.velocity.z);
-            rigidbody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-        }
-
-        private void ResetJump() => readyToJump = true;
-
         private void StateHandler() {
             // SETTING STATE TO SPRINTING
-            if(grounded && Input.GetKey(PlayerKeybinds.sprint)) {
+            if(Input.GetKey(PlayerKeybinds.sprint)) {
                 movementState = MovementState.SPRINTING;
                 movementSpeed = 6 * sprintSpeedMultiplier;
             }
 
             // SETTING STATE TO CROUCHING
-            else if(grounded && Input.GetKey(PlayerKeybinds.crouch)) {
+            else if(Input.GetKey(PlayerKeybinds.crouch)) {
                 movementState = MovementState.CROUCHING;
                 movementSpeed = 6 * crouchSpeedMultiplier;
             }
 
             // SETTING STATE TO WALKING
-            else if(grounded) {
+            else {
                 movementState = MovementState.WALKING;
                 movementSpeed = 6;
-            }
-
-            // SETTING STATE TO AIR
-            else if(!grounded) {
-                movementState = MovementState.AIR;
             }
         }
 
@@ -130,8 +104,13 @@ namespace goofygame.creature.player {
             SPRINTING,
             WALKING,
             CROUCHING,
-            AIR,
             IDLE
+        }
+
+        public void RotateCamera() {
+            var rotation = Camera.main.transform.rotation;
+            rotation.z = Mathf.Lerp(rotation.z, horizontalInput * -1, Time.deltaTime * 5f);
+            Camera.main.transform.rotation = rotation;
         }
     }
 
@@ -141,7 +120,6 @@ namespace goofygame.creature.player {
         public static KeyCode backwards = KeyCode.S;
         public static KeyCode left = KeyCode.A;
         public static KeyCode right = KeyCode.D;
-        public static KeyCode jump = KeyCode.Space;
         public static KeyCode sprint = KeyCode.LeftShift;
         public static KeyCode crouch = KeyCode.LeftControl;
 
