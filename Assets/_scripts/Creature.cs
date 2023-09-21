@@ -12,14 +12,19 @@ namespace goofygame.creature {
         protected event Action<int> healEvent;
         protected event Action<int> damageEvent;
 
-        public void Heal() {
-            _health++;
+        protected event Action deathEvent;
+
+        public void Heal(int amount = 1) {
+            _health += amount;
             healEvent?.Invoke(_health);
         }
 
-        public void Damage() {
-            _health--;
+        public void Damage(int amount = 1) {
+            _health -= amount;
             damageEvent?.Invoke(_health);
+            if(_health <= 0) {
+                deathEvent?.Invoke();
+            }
         }
 
         public bool Attack() {

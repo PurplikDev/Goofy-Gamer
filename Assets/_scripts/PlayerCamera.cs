@@ -41,7 +41,7 @@ namespace goofygame.creature.player {
             xRotation = Mathf.Clamp(xRotation, -80, 80);
 
             head.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-            transform.rotation = Quaternion.Euler(xRotation, yRotation, transform.rotation.z);
+            transform.rotation = Quaternion.Euler(xRotation, yRotation, Input.GetAxisRaw("Horizontal") * -3.5f);
             orientation.rotation = Quaternion.Euler(0, yRotation, 0);
         }
     }

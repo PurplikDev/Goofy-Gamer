@@ -42,7 +42,6 @@ namespace goofygame.creature.player {
             ProcessInputs();
             SpeedCap();
             StateHandler();
-            RotateCamera();
 
             rigidbody.drag = grounded ? groundDrag : 0;
         }
@@ -105,12 +104,6 @@ namespace goofygame.creature.player {
             WALKING,
             CROUCHING,
             IDLE
-        }
-
-        public void RotateCamera() {
-            var rotation = Camera.main.transform.rotation;
-            rotation.z = Mathf.Lerp(rotation.z, horizontalInput * -1, Time.deltaTime * 5f);
-            Camera.main.transform.rotation = rotation;
         }
     }
 
