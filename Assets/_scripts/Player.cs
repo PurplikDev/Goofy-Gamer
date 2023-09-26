@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 
 using goofygame.inventory;
+using System.Collections;
 
 namespace goofygame.creature.player {
     public class Player : Creature {
@@ -15,6 +16,8 @@ namespace goofygame.creature.player {
         [SerializeField] Image _hand;
         [SerializeField] Sprite _normalHand;
         [SerializeField] Sprite _handShoot;
+
+        private bool _isAttacking = false;
 
         public Inventory inventory = new Inventory();
 
@@ -48,10 +51,10 @@ namespace goofygame.creature.player {
                 _healingIndicatorSlider.value = 0;
             }
 
-            _hand.sprite = Input.GetKey(KeyCode.Mouse0) ? _handShoot : _normalHand;
-
             if(Input.GetKeyDown(KeyCode.Mouse0)) {
-                Attack();
+                if(!_isAttacking) {
+                    StartCoroutine(playerAttack(_handShoot, _normalHand, 0.25f));
+                }
             }
 
             if(Input.GetKeyDown(KeyCode.Space)) {
@@ -59,6 +62,13 @@ namespace goofygame.creature.player {
             }
         }
 
-
+        public virtual IEnumerator playerAttack(Sprite sprite1, Sprite sprite2, float time) {
+            _isAttacking = true;
+            Attack();
+            _hand.sprite = sprite1;
+            yield return new WaitForSeconds(time);
+            _hand.sprite = sprite2;
+            _isAttacking = false;
+        }
     }
 }

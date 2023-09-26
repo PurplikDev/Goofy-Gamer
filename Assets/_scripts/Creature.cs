@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace goofygame.creature {
 
@@ -38,6 +40,13 @@ namespace goofygame.creature {
                 return true;
             }
             return false;
+        }
+
+
+        public virtual IEnumerator spriteChange(SpriteRenderer renderer, Sprite sprite1, Sprite sprite2, float time) {
+            renderer.sprite = sprite1;
+            yield return new WaitForSeconds(time);
+            renderer.sprite = sprite2;
         }
     }
 }

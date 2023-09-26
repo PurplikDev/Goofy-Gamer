@@ -23,8 +23,6 @@ namespace goofygame.creature.player {
         private new Rigidbody rigidbody;
         [Space]
         public MovementState movementState;
-        [Space]
-        public bool lockMovement = false;
 
         Vector3 moveDirection;
 
@@ -51,8 +49,6 @@ namespace goofygame.creature.player {
         }
 
         private void ProcessInputs() {
-            if(lockMovement) { return; }
-
             horizontalInput = Input.GetAxisRaw("Horizontal");
             verticalInput = Input.GetAxisRaw("Vertical");
 

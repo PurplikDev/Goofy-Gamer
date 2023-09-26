@@ -24,7 +24,6 @@ namespace goofygame.creature.player {
         void Update() {
             Camera.main.transform.position = head.position;
 
-
             if(lockRotation) {
                 return;
             }
@@ -41,7 +40,11 @@ namespace goofygame.creature.player {
             xRotation = Mathf.Clamp(xRotation, -80, 80);
 
             head.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-            transform.rotation = Quaternion.Euler(xRotation, yRotation, Input.GetAxisRaw("Horizontal") * -3.5f);
+            transform.rotation = Quaternion.Euler(
+                xRotation + transform.InverseTransformDirection(player.GetComponent<Rigidbody>().velocity).z * -0.5f,
+                yRotation,
+                transform.InverseTransformDirection(player.GetComponent<Rigidbody>().velocity).x * -0.75f
+                );
             orientation.rotation = Quaternion.Euler(0, yRotation, 0);
         }
     }
