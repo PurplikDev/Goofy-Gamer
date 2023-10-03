@@ -599,7 +599,7 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &887219349
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,9 +648,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9275060b9ef243358e45e797811002b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprintSpeedMultiplier: 1.5
+  sprintSpeedMultiplier: 2
   crouchSpeedMultiplier: 0.75
-  groundDrag: 4
+  groundDrag: 5
   playerHeight: 2
   groundMask:
     serializedVersion: 2
@@ -920,7 +920,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.7, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1721,8 +1721,9 @@ MonoBehaviour:
   _normalSprite: {fileID: 21300000, guid: 26bb805fbc2304e828b365a474243cec, type: 3}
   _hitSprite: {fileID: 21300000, guid: e395fd1d360a3436f89a749b84db2d82, type: 3}
   _deathSprite: {fileID: 21300000, guid: ba201334c389e4f6285f9eca33b79f0c, type: 3}
-  _isPlayerNear: 0
-  _distanceToPlayer: 0
+  _attackSprite: {fileID: 21300000, guid: e395fd1d360a3436f89a749b84db2d82, type: 3}
+  _attackSpeed: 0.5
+  _attackRange: 5
 --- !u!136 &1507281032
 CapsuleCollider:
   m_ObjectHideFlags: 0

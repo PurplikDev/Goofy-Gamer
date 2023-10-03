@@ -7,10 +7,9 @@ namespace goofygame.creature {
 
     public class Creature : MonoBehaviour, ICreature {
         [SerializeField] private Transform head;
-
+        [Space]
         [SerializeField] private int _health = 10;
         public int Health { get { return _health; } }
-
         protected event Action<int> healEvent;
         protected event Action<int> damageEvent;
 
@@ -46,7 +45,12 @@ namespace goofygame.creature {
         public virtual IEnumerator spriteChange(SpriteRenderer renderer, Sprite sprite1, Sprite sprite2, float time) {
             renderer.sprite = sprite1;
             yield return new WaitForSeconds(time);
-            renderer.sprite = sprite2;
+            if(_health <= 0) {
+                yield break;
+            } else {
+                renderer.sprite = sprite2;
+            }
+            
         }
     }
 }

@@ -4,13 +4,19 @@ using UnityEngine;
 
 namespace goofygame.creature {
     public class LivingCreature : Creature {
+        [Space]
         [SerializeField] Transform _sprite;
         [SerializeField] Sprite _normalSprite;
         [SerializeField] Sprite _hitSprite;
         [SerializeField] Sprite _deathSprite;
+        [SerializeField] Sprite _attackSprite;
+        [Space]
+        [SerializeField] private float _attackSpeed;
+        [SerializeField] private float _attackRange;
         GameObject _player;
-        [SerializeField] private bool _isPlayerNear = false;
-        [SerializeField] private float _distanceToPlayer = 0;
+        private bool _isPlayerNear = false;
+        private float _distanceToPlayer = 0;
+        private bool _isAttacking = false;
 
         private void Awake() {
             _player = GameObject.Find("Player");
@@ -21,10 +27,14 @@ namespace goofygame.creature {
         private void Update() {
             _rotate();
 
-            if(_isPlayerNear) {
-                if(_distanceToPlayer < 2.5f) {
-                    StartCoroutine(livingCreatureAttack(1f));
+            if(_isPlayerNear && !_isAttacking) {
+                if(_distanceToPlayer < _attackRange) {
+                    StartCoroutine(livingCreatureAttack(_attackSpeed));
                 }
+            }
+
+            if(_distanceToPlayer > _attackRange) {
+                _isAttacking = false;
             }
         }
 
@@ -41,10 +51,13 @@ namespace goofygame.creature {
         }
 
         private void death() {
+            StopAllCoroutines();
             Debug.Log("I'm dead");
             _sprite.GetComponent<SpriteRenderer>().sprite = _deathSprite;
-            deathEvent -= death;
+            gameObject.GetComponent<SphereCollider>().enabled = false;
             gameObject.GetComponent<CapsuleCollider>().enabled = false;
+            deathEvent -= death;
+            enabled = false;
         }
 
 
@@ -69,11 +82,13 @@ namespace goofygame.creature {
 
 
         public virtual IEnumerator livingCreatureAttack(float time) {
+            _isAttacking = true;
             yield return new WaitForSeconds(time);
-            if(_distanceToPlayer < 2.5f) {
+            if(_distanceToPlayer < _attackRange) {
+                StartCoroutine(spriteChange(_sprite.GetComponent<SpriteRenderer>(), _attackSprite, _normalSprite, 0.2f));
                 Attack();
+                _isAttacking = false;
             }
         }
-
     }
 }
