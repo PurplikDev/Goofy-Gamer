@@ -17,6 +17,7 @@ namespace goofygame.creature {
         private bool _isPlayerNear = false;
         private float _distanceToPlayer = 0;
         private bool _isAttacking = false;
+        private bool _isAlive = true;
 
         private void Awake() {
             _player = GameObject.Find("Player");
@@ -26,6 +27,8 @@ namespace goofygame.creature {
 
         private void Update() {
             _rotate();
+
+            if(!_isAlive) { return; }
 
             if(_isPlayerNear && !_isAttacking) {
                 if(_distanceToPlayer < _attackRange) {
@@ -57,7 +60,7 @@ namespace goofygame.creature {
             gameObject.GetComponent<SphereCollider>().enabled = false;
             gameObject.GetComponent<CapsuleCollider>().enabled = false;
             deathEvent -= death;
-            enabled = false;
+            _isAlive = false;
         }
 
 

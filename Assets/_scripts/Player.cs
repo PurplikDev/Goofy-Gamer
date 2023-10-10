@@ -60,7 +60,12 @@ namespace goofygame.creature.player {
             if(Input.GetKeyDown(KeyCode.Space)) {
                 inventory.addItem(new ItemStack(ItemRegistry.medkid));
             }
+
+            if(Input.GetKeyDown(KeyCode.E)) {
+                Interact();
+            }
         }
+
 
         public virtual IEnumerator playerAttack(Sprite sprite1, Sprite sprite2, float time) {
             _isAttacking = true;

@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
+using goofygame.enviroment.interactable;
 
 namespace goofygame.creature {
 
@@ -9,6 +9,7 @@ namespace goofygame.creature {
         [SerializeField] private Transform head;
         [Space]
         [SerializeField] private int _health = 10;
+        [SerializeField] private int _maxHealth = 10;
         public int Health { get { return _health; } }
         protected event Action<int> healEvent;
         protected event Action<int> damageEvent;
@@ -16,7 +17,9 @@ namespace goofygame.creature {
         protected event Action deathEvent;
 
         public void Heal(int amount = 1) {
-            _health += amount;
+            int value = _health + amount;
+            Debug.Log(value);
+            _health = value < _maxHealth ? value : _maxHealth;
             healEvent?.Invoke(_health);
         }
 
@@ -33,7 +36,7 @@ namespace goofygame.creature {
             RaycastHit _hit;
             Physics.Raycast(head.position, head.forward, out _hit, 5);
 
-            if(_hit.transform != null) {
+            if(_hit.transform != null && !_hit.collider.isTrigger) {
                 var creature = _hit.transform.gameObject.GetComponent<ICreature>();
                 creature?.Damage();
                 return true;
@@ -41,6 +44,17 @@ namespace goofygame.creature {
             return false;
         }
 
+        public bool Interact() {
+            RaycastHit _hit;
+            Physics.Raycast(head.position, head.forward, out _hit, 5);
+
+            if(_hit.transform != null && _hit.collider.isTrigger) {
+                var interactable = _hit.transform.gameObject.GetComponent<IInteractable>();
+                interactable?.Interact();
+                return true;
+            }
+            return false;
+        }
 
         public virtual IEnumerator spriteChange(SpriteRenderer renderer, Sprite sprite1, Sprite sprite2, float time) {
             renderer.sprite = sprite1;
