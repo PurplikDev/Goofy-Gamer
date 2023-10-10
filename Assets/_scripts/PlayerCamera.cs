@@ -41,9 +41,9 @@ namespace goofygame.creature.player {
 
             head.rotation = Quaternion.Euler(xRotation, yRotation, 0);
             transform.rotation = Quaternion.Euler(
-                xRotation + transform.InverseTransformDirection(player.GetComponent<Rigidbody>().velocity).z * -0.5f,
+                xRotation + transform.InverseTransformDirection(player.GetComponent<Rigidbody>().velocity).z * -0.25f,
                 yRotation,
-                transform.InverseTransformDirection(player.GetComponent<Rigidbody>().velocity).x * -0.75f
+                transform.InverseTransformDirection(player.GetComponent<Rigidbody>().velocity).x * -0.5f
                 );
             orientation.rotation = Quaternion.Euler(0, yRotation, 0);
         }

@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 8062073757080581172}
   - component: {fileID: 5632295122142024273}
   m_Layer: 0
-  m_Name: basicDoorVertical
+  m_Name: basicDoorSlide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

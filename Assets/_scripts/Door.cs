@@ -10,6 +10,7 @@ namespace goofygame.enviroment.interactable {
         public DoorType doorType = DoorType.SLIDE_VERTICAL;
 
         private float _ticker = 1f;
+        [SerializeField] private float _tickerScaler = 1f;
 
         public bool IsInteractable = false;
         [SerializeField] private bool _isOpen = false;
@@ -18,11 +19,17 @@ namespace goofygame.enviroment.interactable {
 
         void Update() {
             if(_ticker < 1f)
-                _ticker += 1f * Time.deltaTime;
+                _ticker += _tickerScaler * Time.deltaTime;
 
             switch(doorType) {
                 case DoorType.SLIDE_HORIZONTAL:
-                    // do slidy stuff
+                    _movingPart.transform.position = new Vector3(
+                        Mathf.Lerp(
+                            transform.position.x + (_isOpen ? 0 : 4f),
+                            transform.position.x + (_isOpen ? 4f : 0),
+                            _ticker),
+                        _movingPart.transform.position.y,
+                        _movingPart.transform.position.z);
                     break;
 
                 case DoorType.SLIDE_VERTICAL:
@@ -36,7 +43,16 @@ namespace goofygame.enviroment.interactable {
                     break;
 
                 case DoorType.ROTATIONAL:
-                    // spiiiiiiiiiiiin
+                    _movingPart.transform.rotation = Quaternion.Slerp(
+                        _movingPart.transform.rotation,
+                        new Quaternion(
+                            transform.rotation.x,
+                            transform.rotation.y + (_isOpen ? 1f : 0f),
+                            transform.rotation.z,
+                            transform.rotation.w
+                            ),
+                        _ticker
+                        );
                     break;
             }
         }
@@ -47,8 +63,6 @@ namespace goofygame.enviroment.interactable {
 
             _isOpen = !_isOpen;
             _ticker = 0;
-
-            Debug.Log("Nonagon Infinity opens the door!");
         }
 
         private bool checkSwitches() {
