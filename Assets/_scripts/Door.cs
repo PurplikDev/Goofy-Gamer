@@ -13,7 +13,7 @@ namespace goofygame.enviroment.interactable {
         [SerializeField] private float _tickerScaler = 1f;
 
         public bool IsInteractable = false;
-        [SerializeField] private bool _isOpen = false;
+        private bool _isOpen = false;
 
         [SerializeField] private Transform _movingPart;
 
