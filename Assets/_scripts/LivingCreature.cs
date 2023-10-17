@@ -1,5 +1,7 @@
 using System.Collections;
 using goofygame.creature.player;
+using goofygame.enviroment.interactable;
+using goofygame.inventory;
 using UnityEngine;
 
 namespace goofygame.creature {
@@ -19,6 +21,8 @@ namespace goofygame.creature {
         private float _distanceToPlayer = 0;
         private bool _isAttacking = false;
         private bool _isAlive = true;
+
+
 
         private void Awake() {
             _player = GameObject.Find("Player");
@@ -42,6 +46,8 @@ namespace goofygame.creature {
             }
         }
 
+
+
         private void _rotate() {
             var lookDir = _player.transform.position - transform.position;
             lookDir.y = 0; // keep only the horizontal direction
@@ -60,13 +66,11 @@ namespace goofygame.creature {
             _sprite.GetComponent<SpriteRenderer>().sprite = _deathSprite;
             gameObject.GetComponent<SphereCollider>().enabled = false;
             gameObject.GetComponent<CapsuleCollider>().enabled = false;
+            var item = Instantiate(Resources.Load<GameObject>("prefabs/Item"), transform.position + new Vector3(0, 1, 0), transform.rotation);
+            item.GetComponent<Collectable>().Item = ItemRegistry.medkid;
             deathEvent -= death;
             _isAlive = false;
         }
-
-
-
-
 
         private void OnTriggerStay(Collider other) {
             var player = other.GetComponent<Player>();

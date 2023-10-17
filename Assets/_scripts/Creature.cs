@@ -6,7 +6,7 @@ using goofygame.enviroment.interactable;
 namespace goofygame.creature {
 
     public class Creature : MonoBehaviour, ICreature {
-        [SerializeField] private Transform head;
+        [SerializeField] protected Transform head;
         [Space]
         [SerializeField] private int _health = 10;
         [SerializeField] private int _maxHealth = 10;
@@ -38,18 +38,6 @@ namespace goofygame.creature {
             if(_hit.transform != null && !_hit.collider.isTrigger) {
                 var creature = _hit.transform.gameObject.GetComponent<ICreature>();
                 creature?.Damage(damage);
-                return true;
-            }
-            return false;
-        }
-
-        public bool Interact() {
-            RaycastHit _hit;
-            Physics.Raycast(head.position, head.forward, out _hit, 5);
-
-            if(_hit.transform != null && _hit.collider.isTrigger) {
-                var interactable = _hit.transform.gameObject.GetComponent<IInteractable>();
-                interactable?.Interact();
                 return true;
             }
             return false;

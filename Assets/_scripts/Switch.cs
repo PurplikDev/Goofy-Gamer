@@ -1,3 +1,4 @@
+using goofygame.creature.player;
 using UnityEngine;
 namespace goofygame.enviroment.interactable {
     public class Switch : MonoBehaviour, IInteractable {
@@ -13,7 +14,7 @@ namespace goofygame.enviroment.interactable {
             Debug.Log("Switched to: " + _state);
         }
 
-        public void Interact() {
+        public void Interact(Player player) {
             Activate();
         }
     }

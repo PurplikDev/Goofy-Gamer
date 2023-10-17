@@ -7,6 +7,7 @@ using goofygame.inventory;
 using System.Collections;
 using System;
 using goofygame.inventory.gun;
+using goofygame.enviroment.interactable;
 
 namespace goofygame.creature.player {
     public class Player : Creature {
@@ -26,6 +27,7 @@ namespace goofygame.creature.player {
         public Inventory inventory = new Inventory();
 
         private float _healthTimer = 0;
+        private float _ticker = 1;
 
         private void Awake() {
             healEvent += _updateHealth;
@@ -41,6 +43,10 @@ namespace goofygame.creature.player {
         }
 
         private void Update() {
+
+            if(_ticker < 1f)
+                _ticker += 2.5f * Time.deltaTime;
+
             if(Input.GetKey(KeyCode.Mouse0)) {
                 if(_activeItem is WeaponItem _gunItem) {
                     if(!_isAttacking) {
@@ -116,10 +122,31 @@ namespace goofygame.creature.player {
             _hand.sprite = _activeItem.NormalSprite;
         }
 
+        public bool Interact() {
+            RaycastHit _hit;
+            Physics.Raycast(head.position, head.forward, out _hit, 5);
+
+            if(_hit.transform != null && _hit.collider.isTrigger) {
+                var interactable = _hit.transform.gameObject.GetComponent<IInteractable>();
+                interactable?.Interact(this);
+                return true;
+            }
+            return false;
+        }
+
         public virtual IEnumerator playerAttack(WeaponItem item) {
             _isAttacking = true;
             Attack(item.GetWeapon.Damage, item.GetWeapon.Range);
             _hand.sprite = item.ActiveSprite;
+            _ticker = 0;
+            _hand.rectTransform.position = new Vector3(
+                _hand.rectTransform.position.x,
+                    Mathf.Lerp(
+                        -690,
+                        -290,
+                        _ticker),
+                _hand.rectTransform.position.z);
+
             yield return new WaitForSeconds(item.GetWeapon.AttackSpeed);
             _hand.sprite = item.NormalSprite;
             _isAttacking = false;

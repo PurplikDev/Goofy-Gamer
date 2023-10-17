@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using goofygame.creature;
+using goofygame.creature.player;
 
 namespace goofygame.enviroment.interactable {
     public class Door : MonoBehaviour, IInteractable {
@@ -74,7 +75,7 @@ namespace goofygame.enviroment.interactable {
             return true;
         }
 
-        public void Interact() {
+        public void Interact(Player player) {
             if(IsInteractable)
                 Open();
         }
