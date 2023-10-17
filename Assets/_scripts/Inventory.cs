@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using goofygame.inventory.gun;
 
 namespace goofygame.inventory {
 
@@ -51,6 +52,18 @@ namespace goofygame.inventory {
         public Item(string itemName) {
             _itemName = itemName;
         }
+
+        public Sprite ActiveSprite {
+            get {
+                return Resources.Load<Sprite>("sprites/items/" + _itemName + "_active");
+            }
+        }
+
+        public Sprite NormalSprite {
+            get {
+                return Resources.Load<Sprite>("sprites/items/" + _itemName + "_normal");
+            }
+        }
     }
 
     public class ItemStack {
@@ -67,6 +80,8 @@ namespace goofygame.inventory {
     }
 
     public static class ItemRegistry {
+        public static Item air = new Item("");
         public static Item medkid = new Item("Medkit");
+        public static WeaponItem handgun = new WeaponItem("Handgun", 2, 10f, 0.5f);
     }
 }

@@ -3,14 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using goofygame.creature.player;
+using System;
 
 namespace goofygame.inventory {
     public class InventoryDisplay : MonoBehaviour {
         [SerializeField] List<TextMeshProUGUI> slotsDisplay = new List<TextMeshProUGUI>(6);
 
+        [SerializeField] TextMeshProUGUI _activeItemDisplay;
+
         [SerializeField] GameObject displayParent;
 
         [SerializeField] Player player;
+
+        private void Awake() {
+            player.SwitchItemEvent += switchItem;
+        }
 
         private void Update() {
 
@@ -26,6 +33,17 @@ namespace goofygame.inventory {
             } else {
                 displayParent.SetActive(false);
             }
+        }
+
+        private void switchItem(int itemIndex) {
+
+            try {
+                var tempItem = player.inventory.Container[itemIndex].Item;
+            } catch(ArgumentOutOfRangeException) {
+                _activeItemDisplay.text = "";
+                return;
+            }
+            _activeItemDisplay.text = player.inventory.Container[itemIndex].Item.ItemName;
         }
     }
 }

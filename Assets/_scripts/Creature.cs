@@ -31,14 +31,13 @@ namespace goofygame.creature {
             }
         }
 
-        public bool Attack() {
-
+        public bool Attack(int damage, float range) {
             RaycastHit _hit;
-            Physics.Raycast(head.position, head.forward, out _hit, 5);
+            Physics.Raycast(head.position, head.forward, out _hit, range);
 
             if(_hit.transform != null && !_hit.collider.isTrigger) {
                 var creature = _hit.transform.gameObject.GetComponent<ICreature>();
-                creature?.Damage();
+                creature?.Damage(damage);
                 return true;
             }
             return false;

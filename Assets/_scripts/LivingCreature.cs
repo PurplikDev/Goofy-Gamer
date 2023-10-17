@@ -13,6 +13,7 @@ namespace goofygame.creature {
         [Space]
         [SerializeField] private float _attackSpeed;
         [SerializeField] private float _attackRange;
+        [SerializeField] private int _damage;
         GameObject _player;
         private bool _isPlayerNear = false;
         private float _distanceToPlayer = 0;
@@ -89,7 +90,7 @@ namespace goofygame.creature {
             yield return new WaitForSeconds(time);
             if(_distanceToPlayer < _attackRange) {
                 StartCoroutine(spriteChange(_sprite.GetComponent<SpriteRenderer>(), _attackSprite, _normalSprite, 0.2f));
-                Attack();
+                Attack(_damage, _attackRange);
                 _isAttacking = false;
             }
         }
