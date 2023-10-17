@@ -57,11 +57,13 @@ namespace goofygame.creature.player {
                             inventory.removeItem(ItemRegistry.medkid);
                             SwitchItemEvent.Invoke(0);
                         }
-                } else {
-                    _healTimerIndicator.SetActive(false);
-                    _healthTimer = 0;
-                    _healingIndicatorSlider.value = 0;
                 }
+            }
+
+            if(Input.GetKeyUp(KeyCode.Mouse0)) {
+                _healTimerIndicator.SetActive(false);
+                _healthTimer = 0;
+                _healingIndicatorSlider.value = 0;
             }
 
             if(Input.GetKeyDown(KeyCode.Space)) {
@@ -70,6 +72,10 @@ namespace goofygame.creature.player {
 
             if(Input.GetKeyDown(KeyCode.P)) {
                 inventory.addItem(new ItemStack(ItemRegistry.handgun));
+            }
+
+            if(Input.GetKeyDown(KeyCode.K)) {
+                inventory.addItem(new ItemStack(ItemRegistry.theBigBaller));
             }
 
             if(Input.GetKeyDown(KeyCode.E)) {

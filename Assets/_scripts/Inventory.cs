@@ -55,13 +55,13 @@ namespace goofygame.inventory {
 
         public Sprite ActiveSprite {
             get {
-                return Resources.Load<Sprite>("sprites/items/" + _itemName + "_active");
+                return Resources.Load<Sprite>("sprites/items/" + _itemName.ToLower() + "_active");
             }
         }
 
         public Sprite NormalSprite {
             get {
-                return Resources.Load<Sprite>("sprites/items/" + _itemName + "_normal");
+                return Resources.Load<Sprite>("sprites/items/" + _itemName.ToLower() + "_normal");
             }
         }
     }
@@ -82,6 +82,7 @@ namespace goofygame.inventory {
     public static class ItemRegistry {
         public static Item air = new Item("");
         public static Item medkid = new Item("Medkit");
-        public static WeaponItem handgun = new WeaponItem("Handgun", 2, 10f, 0.5f);
+        public static WeaponItem handgun = new WeaponItem("Handgun", 1, 10f, 0.25f);
+        public static WeaponItem theBigBaller = new WeaponItem("TheBigBaller", 5, 50f, 2.5f);
     }
 }

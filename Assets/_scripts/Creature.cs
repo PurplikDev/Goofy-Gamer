@@ -33,7 +33,7 @@ namespace goofygame.creature {
 
         public bool Attack(int damage, float range) {
             RaycastHit _hit;
-            Physics.Raycast(head.position, head.forward, out _hit, range);
+            Physics.Raycast(head.position, head.forward, out _hit, range, -5, QueryTriggerInteraction.Ignore);
 
             if(_hit.transform != null && !_hit.collider.isTrigger) {
                 var creature = _hit.transform.gameObject.GetComponent<ICreature>();
