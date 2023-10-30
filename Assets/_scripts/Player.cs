@@ -1,13 +1,13 @@
+using goofygame.enviroment.interactable;
+using goofygame.inventory;
+using goofygame.inventory.gun;
+using System;
+using System.Collections;
 using System.Text;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-
-using goofygame.inventory;
-using System.Collections;
-using System;
-using goofygame.inventory.gun;
-using goofygame.enviroment.interactable;
 
 namespace goofygame.creature.player {
     public class Player : Creature {
@@ -17,6 +17,7 @@ namespace goofygame.creature.player {
         Slider _healingIndicatorSlider;
 
         [SerializeField] Image _hand;
+        [SerializeField] Image _damageEffect;
 
         private Item _activeItem;
 
@@ -27,7 +28,7 @@ namespace goofygame.creature.player {
         public Inventory inventory = new Inventory();
 
         private float _healthTimer = 0;
-        private float _ticker = 1;
+        private float _damageTicker, _handTicker = 1;
 
         private void Awake() {
             healEvent += _updateHealth;
@@ -39,13 +40,28 @@ namespace goofygame.creature.player {
 
         private void _updateHealth(int health) {
             StringBuilder healthText = new StringBuilder("[ Health: ").Append(Health).Append(" ]");
-            _healthDisplay.text = healthText.ToString();
+            _healthDisplay.text = Health > 0 ? healthText.ToString() : "";
         }
 
         private void Update() {
 
-            if(_ticker < 1f)
-                _ticker += 2.5f * Time.deltaTime;
+            if(_damageTicker < 1f) {
+                _damageTicker += 2.5f * Time.deltaTime;
+                _damageEffect.color = Health > 0 ? new Color(255, 255, 255, Mathf.Lerp(0.75f, 0, _damageTicker)) : new Color(255, 255 , 255, 0.75f);
+            }
+
+            if(_handTicker < 1f && _activeItem != null) {
+                _handTicker += _activeItem.ItemCooldown * Time.deltaTime;
+
+                _hand.rectTransform.position = new Vector3(
+                    _hand.rectTransform.position.x,
+                     Mathf.Lerp(-150, 250, _handTicker),
+                    _hand.rectTransform.position.z);
+            }
+
+            if(Input.GetKeyDown(KeyCode.T)) {
+                Debug.Log(_hand.rectTransform.position.y);
+            }
 
             if(Input.GetKey(KeyCode.Mouse0)) {
                 if(_activeItem is WeaponItem _gunItem) {
@@ -53,7 +69,8 @@ namespace goofygame.creature.player {
                         StartCoroutine(playerAttack(_gunItem));
                     }
                 }
-                if(_activeItem == ItemRegistry.medkid) {
+
+                if(_activeItem == ItemRegistry.medkid && !(Health == _maxHealth)) {
                         _healTimerIndicator.SetActive(true);
                         _healthTimer += 0.5f * Time.deltaTime;
                         _healingIndicatorSlider.value = _healthTimer;
@@ -72,20 +89,27 @@ namespace goofygame.creature.player {
                 _healingIndicatorSlider.value = 0;
             }
 
-            if(Input.GetKeyDown(KeyCode.Space)) {
+            if (Input.GetKeyDown(KeyCode.Space)) {
                 inventory.addItem(new ItemStack(ItemRegistry.medkid));
             }
 
-            if(Input.GetKeyDown(KeyCode.P)) {
+            if (Input.GetKeyDown(KeyCode.P)) {
                 inventory.addItem(new ItemStack(ItemRegistry.handgun));
             }
 
-            if(Input.GetKeyDown(KeyCode.K)) {
+            if (Input.GetKeyDown(KeyCode.K)) {
                 inventory.addItem(new ItemStack(ItemRegistry.theBigBaller));
             }
 
-            if(Input.GetKeyDown(KeyCode.E)) {
+            if (Input.GetKeyDown(KeyCode.E)) {
                 Interact();
+            }
+
+            if(_activeItem != null && Input.GetKey(KeyCode.Tab) && Input.GetKeyDown(KeyCode.Q)) {
+                var item = Instantiate(Resources.Load("prefabs/Item"), transform.position + new Vector3(0, 1, 0), transform.rotation);
+                item.GetComponent<Collectable>().Item = _activeItem;
+                inventory.removeItem(_activeItem);
+                SwitchItemEvent.Invoke(0);
             }
 
 
@@ -108,6 +132,10 @@ namespace goofygame.creature.player {
             }
         }
 
+        public override void Damage(int amount = 1) {
+            base.Damage(amount);
+            _damageTicker = 0;
+        }
 
         private void _switchItem(int itemIndex) {
             try {
@@ -115,9 +143,10 @@ namespace goofygame.creature.player {
             } catch (ArgumentOutOfRangeException) {
                 _activeItem = null;
                 _hand.sprite = null;
-                _hand.color = new Color(0, 0, 0, 0);
+                _hand.color = new Color(255, 255, 255, 0);
                 return;
             }
+            _handTicker = 0;
             _hand.color = Color.white;
             _hand.sprite = _activeItem.NormalSprite;
         }
@@ -138,15 +167,7 @@ namespace goofygame.creature.player {
             _isAttacking = true;
             Attack(item.GetWeapon.Damage, item.GetWeapon.Range);
             _hand.sprite = item.ActiveSprite;
-            _ticker = 0;
-            _hand.rectTransform.position = new Vector3(
-                _hand.rectTransform.position.x,
-                    Mathf.Lerp(
-                        -690,
-                        -290,
-                        _ticker),
-                _hand.rectTransform.position.z);
-
+            _handTicker = 0;
             yield return new WaitForSeconds(item.GetWeapon.AttackSpeed);
             _hand.sprite = item.NormalSprite;
             _isAttacking = false;

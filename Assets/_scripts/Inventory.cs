@@ -43,14 +43,17 @@ namespace goofygame.inventory {
 
     public class Item {
         string _itemName;
-        public string ItemName {
-            get {
-                return _itemName;
-            }
+        float _itemCooldown;
+
+        public string ItemName { get { return _itemName; } }
+        public float ItemCooldown { get { return _itemCooldown; } }
+
+        public Item(string itemName) : this(itemName, 2.5f) {
         }
 
-        public Item(string itemName) {
+        public Item(string itemName, float itemCooldown) {
             _itemName = itemName;
+            _itemCooldown = itemCooldown;
         }
 
         public Sprite ActiveSprite {
@@ -82,7 +85,7 @@ namespace goofygame.inventory {
     public static class ItemRegistry {
         public static Item air = new Item("");
         public static Item medkid = new Item("Medkit");
-        public static WeaponItem handgun = new WeaponItem("Handgun", 1, 10f, 0.25f);
-        public static WeaponItem theBigBaller = new WeaponItem("TheBigBaller", 5, 50f, 2.5f);
+        public static WeaponItem handgun = new WeaponItem("Handgun", 1, 10f, 0.5f);
+        public static WeaponItem theBigBaller = new WeaponItem("TheBigBaller", 0.5f, 5, 50f, 2.5f);
     }
 }

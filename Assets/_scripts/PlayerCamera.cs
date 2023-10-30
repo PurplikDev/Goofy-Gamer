@@ -16,15 +16,42 @@ namespace goofygame.creature.player {
 
         public bool lockRotation = false;
 
+        public bool isDead = false;
+
+        private float _deathTicker = 0;
+
         void Start() {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+
+            player.GetComponent<Player>().deathEvent += DeathCamera;
         }
 
         void Update() {
+            if (!isDead) {
+                NormalRotation();
+            } else {
+                _deathTicker += Time.deltaTime * 0.125f;
+
+                var rotation = Camera.main.transform.rotation;
+
+
+                Camera.main.transform.rotation = Quaternion.Slerp(
+                    rotation,
+                    new Quaternion(0.210207403f, 0.153217167f, -0.234402418f, 0.936692536f),
+                    _deathTicker);
+            }
+            
+        }
+
+        private void DeathCamera() {
+            isDead = true;
+        }
+
+        private void NormalRotation() {
             Camera.main.transform.position = head.position;
 
-            if(lockRotation) {
+            if (lockRotation) {
                 return;
             }
 

@@ -42,7 +42,9 @@ namespace goofygame.inventory.gun {
             }
         }
 
-        public WeaponItem(string name, int damage, float range, float attackSpeed) : base(name) {
+        public WeaponItem(string name, int damage, float range, float attackSpeed) : this(name, 2.5f, damage, range, attackSpeed) {}
+
+        public WeaponItem(string name, float itemCooldown, int damage, float range, float attackSpeed) : base(name, itemCooldown) {
             _weapon = new Weapon(name, damage, range, attackSpeed);
         }
     }

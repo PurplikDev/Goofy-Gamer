@@ -28,7 +28,7 @@ namespace goofygame.enviroment.interactable {
         }
 
         public void Interact(Player player) {
-            if(player.inventory.addItem(new ItemStack(Item))) {
+            if(Item != null && player.inventory.addItem(new ItemStack(Item))) {
                 Destroy(gameObject);
             }
             

@@ -9,21 +9,21 @@ namespace goofygame.creature {
         [SerializeField] protected Transform head;
         [Space]
         [SerializeField] private int _health = 10;
-        [SerializeField] private int _maxHealth = 10;
+        [SerializeField] protected int _maxHealth = 10;
         public int Health { get { return _health; } }
         protected event Action<int> healEvent;
         protected event Action<int> damageEvent;
 
-        protected event Action deathEvent;
+        public event Action deathEvent;
 
-        public void Heal(int amount = 1) {
+        public virtual void Heal(int amount = 1) {
             int value = _health + amount;
             Debug.Log(value);
             _health = value < _maxHealth ? value : _maxHealth;
             healEvent?.Invoke(_health);
         }
 
-        public void Damage(int amount = 1) {
+        public virtual void Damage(int amount = 1) {
             _health -= amount;
             damageEvent?.Invoke(_health);
             if(_health <= 0) {

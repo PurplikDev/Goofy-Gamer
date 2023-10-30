@@ -26,12 +26,16 @@ namespace goofygame.creature.player {
 
         Vector3 moveDirection;
 
+        private bool lockMovement = false;
+
         private void Awake() {
             rigidbody = GetComponent<Rigidbody>();
             rigidbody.freezeRotation = true;
 
             hitbox = GetComponentInChildren<CapsuleCollider>();
             startYScale = hitbox.height;
+
+            GetComponent<Player>().deathEvent += Die;
         }
 
         void Update() {
@@ -45,6 +49,9 @@ namespace goofygame.creature.player {
         }
 
         void FixedUpdate() {
+
+            if (lockMovement) return;
+
             MovePlayer();
         }
 
@@ -93,6 +100,10 @@ namespace goofygame.creature.player {
                 movementState = MovementState.WALKING;
                 movementSpeed = 6;
             }
+        }
+
+        private void Die() {
+            lockMovement = true;
         }
 
         public enum MovementState {
