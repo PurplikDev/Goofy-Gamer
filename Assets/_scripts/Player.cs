@@ -31,14 +31,14 @@ namespace goofygame.creature.player {
         private float _damageTicker, _handTicker = 1;
 
         private void Awake() {
-            healEvent += _updateHealth;
-            damageEvent += _updateHealth;
-            SwitchItemEvent += _switchItem;
-            _updateHealth(Health);
+            healEvent += UpdateHealth;
+            damageEvent += UpdateHealth;
+            SwitchItemEvent += SwitchItem;
+            UpdateHealth(Health);
             _healingIndicatorSlider = _healTimerIndicator.GetComponentInChildren<Slider>();
         }
 
-        private void _updateHealth(int health) {
+        private void UpdateHealth(int health) {
             StringBuilder healthText = new StringBuilder("[ Health: ").Append(Health).Append(" ]");
             _healthDisplay.text = Health > 0 ? healthText.ToString() : "";
         }
@@ -66,25 +66,28 @@ namespace goofygame.creature.player {
             if(Input.GetKey(KeyCode.Mouse0)) {
                 if(_activeItem is WeaponItem _gunItem) {
                     if(!_isAttacking) {
-                        StartCoroutine(playerAttack(_gunItem));
+                        StartCoroutine(PlayerAttack(_gunItem));
                     }
                 }
 
                 if(_activeItem == ItemRegistry.medkid && !(Health == _maxHealth)) {
-                        _healTimerIndicator.SetActive(true);
-                        _healthTimer += 0.5f * Time.deltaTime;
-                        _healingIndicatorSlider.value = _healthTimer;
-                        if(_healthTimer >= 1.5f) {
-                            Heal(5);
-                            _healthTimer = 0;
-                            inventory.removeItem(ItemRegistry.medkid);
-                            SwitchItemEvent.Invoke(0);
-                        }
+                    _hand.sprite = _activeItem.ActiveSprite;
+                    _healTimerIndicator.SetActive(true);
+                    _healthTimer += 0.5f * Time.deltaTime;
+                    _healingIndicatorSlider.value = _healthTimer;
+                    if(_healthTimer >= 1.5f) {
+                        Heal(5);
+                        _healthTimer = 0;
+                        _hand.sprite = _activeItem.NormalSprite;
+                        inventory.removeItem(ItemRegistry.medkid);
+                        SwitchItemEvent.Invoke(0);
+                    }
                 }
             }
 
             if(Input.GetKeyUp(KeyCode.Mouse0)) {
                 _healTimerIndicator.SetActive(false);
+                if(_activeItem != null) { _hand.sprite = _activeItem.NormalSprite; }
                 _healthTimer = 0;
                 _healingIndicatorSlider.value = 0;
             }
@@ -106,7 +109,7 @@ namespace goofygame.creature.player {
             }
 
             if(_activeItem != null && Input.GetKey(KeyCode.Tab) && Input.GetKeyDown(KeyCode.Q)) {
-                var item = Instantiate(Resources.Load("prefabs/Item"), transform.position + new Vector3(0, 1, 0), transform.rotation);
+                var item = Instantiate(Resources.Load("prefabs/Item"), transform.position + new Vector3(0, 0.5f, 0), transform.rotation);
                 item.GetComponent<Collectable>().Item = _activeItem;
                 inventory.removeItem(_activeItem);
                 SwitchItemEvent.Invoke(0);
@@ -137,7 +140,7 @@ namespace goofygame.creature.player {
             _damageTicker = 0;
         }
 
-        private void _switchItem(int itemIndex) {
+        private void SwitchItem(int itemIndex) {
             try {
                 _activeItem = inventory.Container[itemIndex].Item;
             } catch (ArgumentOutOfRangeException) {
@@ -163,7 +166,7 @@ namespace goofygame.creature.player {
             return false;
         }
 
-        public virtual IEnumerator playerAttack(WeaponItem item) {
+        public virtual IEnumerator PlayerAttack(WeaponItem item) {
             _isAttacking = true;
             Attack(item.GetWeapon.Damage, item.GetWeapon.Range);
             _hand.sprite = item.ActiveSprite;

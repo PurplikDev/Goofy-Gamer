@@ -66,7 +66,7 @@ namespace goofygame.creature {
             _sprite.GetComponent<SpriteRenderer>().sprite = _deathSprite;
             gameObject.GetComponent<SphereCollider>().enabled = false;
             gameObject.GetComponent<CapsuleCollider>().enabled = false;
-            var item = Instantiate(Resources.Load<GameObject>("prefabs/Item"), transform.position + new Vector3(0, 1, 0), transform.rotation);
+            var item = Instantiate(Resources.Load<GameObject>("prefabs/Item"), transform.position, transform.rotation);
             item.GetComponent<Collectable>().Item = ItemRegistry.medkid;
             deathEvent -= death;
             _isAlive = false;
