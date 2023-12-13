@@ -70,11 +70,11 @@ namespace goofygame.creature.player {
             transform.rotation = Quaternion.Euler(
                 xRotation + transform.InverseTransformDirection(player.GetComponent<Rigidbody>().velocity).z * -0.125f,
                 yRotation,
-                transform.InverseTransformDirection(player.GetComponent<Rigidbody>().velocity).x * -0.5f
+                transform.InverseTransformDirection(player.GetComponent<Rigidbody>().velocity).x * -0.25f
                 );
             orientation.rotation = Quaternion.Euler(0, yRotation, 0);
 
-            Camera.main.fieldOfView = 58.71551f + transform.InverseTransformDirection(player.GetComponent<Rigidbody>().velocity).z;
+            Camera.main.fieldOfView = 58.71551f + transform.InverseTransformDirection(player.GetComponent<Rigidbody>().velocity).z * 0.5F;
         }
     }
 }
