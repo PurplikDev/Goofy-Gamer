@@ -1,3 +1,4 @@
+using goofygame.inventory.gun;
 using UnityEngine;
 
 namespace goofygame.creature.player {
@@ -18,7 +19,7 @@ namespace goofygame.creature.player {
 
         public bool isDead = false;
 
-        private float _deathTicker = 0;
+        private float _deathTicker, _recoilTicker, _recoilStrength;
 
         void Start() {
             Cursor.lockState = CursorLockMode.Locked;
@@ -40,6 +41,10 @@ namespace goofygame.creature.player {
                     rotation,
                     new Quaternion(0.210207403f, 0.153217167f, -0.234402418f, 0.936692536f),
                     _deathTicker);
+            }
+
+            if(_recoilTicker < 1f) {
+                _recoilTicker += 2.5f * Time.deltaTime;
             }
             
         }
@@ -75,6 +80,10 @@ namespace goofygame.creature.player {
             orientation.rotation = Quaternion.Euler(0, yRotation, 0);
 
             Camera.main.fieldOfView = 58.71551f + transform.InverseTransformDirection(player.GetComponent<Rigidbody>().velocity).z * 0.5F;
+        }
+
+        private void Recoil(WeaponItem weapon) {
+            // todo: recoil logic
         }
     }
 }

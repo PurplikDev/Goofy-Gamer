@@ -85,7 +85,7 @@ namespace goofygame.inventory {
     public static class ItemRegistry {
         public static Item air = new Item("");
         public static Item medkid = new Item("Medkit");
-        public static WeaponItem handgun = new WeaponItem("Handgun", 1, 10f, 0.5f);
-        public static WeaponItem theBigBaller = new WeaponItem("TheBigBaller", 0.5f, 5, 50f, 2.5f);
+        public static WeaponItem handgun = new WeaponItem("Handgun", 1, 10f, 0.5f, 1f);
+        public static WeaponItem theBigBaller = new WeaponItem("TheBigBaller", 0.5f, 5, 50f, 2.5f, 100f);
     }
 }

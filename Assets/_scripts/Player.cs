@@ -22,13 +22,13 @@ namespace goofygame.creature.player {
         private Item _activeItem;
 
         public event Action<int> SwitchItemEvent;
+        public event Action<WeaponItem> ShootEvent;
 
         private bool _isAttacking = false;
 
         public Inventory inventory = new Inventory();
 
-        private float _healthTimer = 0;
-        private float _damageTicker, _handTicker = 1;
+        private float _healthTimer, _damageTicker, _handTicker;
 
         private void Awake() {
             healEvent += UpdateHealth;
@@ -36,6 +36,9 @@ namespace goofygame.creature.player {
             SwitchItemEvent += SwitchItem;
             UpdateHealth(Health);
             _healingIndicatorSlider = _healTimerIndicator.GetComponentInChildren<Slider>();
+            _healthTimer = 0;
+            _damageTicker = 1f;
+            _handTicker = 1f;
         }
 
         private void UpdateHealth(int health) {
@@ -168,6 +171,7 @@ namespace goofygame.creature.player {
 
         public virtual IEnumerator PlayerAttack(WeaponItem item) {
             _isAttacking = true;
+            ShootEvent.Invoke(item);
             Attack(item.GetWeapon.Damage, item.GetWeapon.Range);
             _hand.sprite = item.ActiveSprite;
             _handTicker = 0;
